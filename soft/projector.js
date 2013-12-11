@@ -24,7 +24,7 @@ Viewer.prototype.init = function(param)
     dlights[0].position.set(-20, 0, 0);
     this.scene.add(dlights[0]);
     
-    dlights[1] = new THREE.DirectionalLight( 0xffffff, 1 /*0.8*/ );
+    dlights[1] = new THREE.DirectionalLight( 0xffffff, 0.9 /*0.8*/ );
     dlights[1].position.set(20, 0, 0);
    // this.scene.add(dlights[1]);
 
