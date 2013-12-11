@@ -155,8 +155,16 @@ function KnotsVectorDiscretization(knotVector, knotVectorType,
     
     var e = new Array(); // result
     var de = (knotVector[lastKnotIndex] - knotVector[firstKnotIndex]) / (tmpDiscretizationPointsCount - 1);
-    for(var i = 0; i < discretizationPointsCount; ++i)
-        e[i] = knotVector[firstKnotIndex] + i*de;
+
+    // fix by DB
+    var i;
+    for(i = 0; i < discretizationPointsCount - 1; ++i)
+        e[i] = knotVector[firstKnotIndex] + i * de;
+    
+    if(knotVectorType == "OPEN")
+        e[i] = knotVector[firstKnotIndex];
+    else if(knotVectorType == "PERIODIC")
+        e[i] = knotVector[firstKnotIndex] + i * de;
     
     return e;
 }
