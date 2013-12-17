@@ -18,6 +18,7 @@
         </div>
         <script src="triangle.js"></script>
         <script src="point.js"></script>
+        <script src="model.js"></script>
         <script src="filereader.js"></script>
         <script src="cptosp.js"></script>
         <script src="projector.js"></script>
@@ -30,20 +31,16 @@
                 extractFile(fileInput.files[0], function(e){
                     // process nurbs.txt
                     uploadedFile = e.target.result;
-                    
-                    // array of points
                     // discretizationPointsCount na sztywno = 20;
                     var spts = ControlPointsToSurfacePoints(fileDataToControlPoints(uploadedFile), 20);
-
+                    var geom = SurfacePointsToGeometry(spts);
                     // visualize
                     var container = document.getElementById("container");
                     var app = new Viewer();
                     app.init({ container: container });
-                    
-                    // !
-                    //app.spheresFromSurfacePoints(spts);
-                    app.trianglesToScreen(spts);
-                    // app.addContour();
+
+                    app.CreateModelThenAddToScene(geom); // przenieść do inita
+                    app.createLocalCube();
                     app.run();
                 });
             });                
