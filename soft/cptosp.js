@@ -8,21 +8,16 @@ function ControlPointsToSurfacePoints(controlPoints, discretizationPointsCount/*
     var controlPointsRowsCount = controlPoints.length;
     var controlPointsColsCount = controlPoints[0].length;
     
-    //console.log("Rows "+controlPointsRowsCount + " Cols "+controlPointsColsCount);
-    
     var basisFunctionOrder_e = 2;
     var basisFunctionOrder_n = 2;
     
-    var basisFunctionsCount_e = controlPointsRowsCount + basisFunctionOrder_e;
+    var basisFunctionsCount_e = controlPointsColsCount + basisFunctionOrder_e;
     var basisFunctionsCount_n = controlPointsRowsCount;
-    
+    console.log("basisFunctionsCount_e = "+basisFunctionsCount_e);
     
     // knots
     var knotsVector_e = CalculateArrayOfKnots(controlPointsColsCount, basisFunctionOrder_e, "PERIODIC");
     var knotsVector_n = CalculateArrayOfKnots(controlPointsRowsCount, basisFunctionOrder_n, "OPEN");
-    
-    //console.log("knotsVector_e = " + knotsVector_e);
-    //console.log("knotsVector_n = " + knotsVector_n);
     
     // discretization
     var eDiscretizationPointsCount = discretizationPointsCount;
@@ -33,8 +28,6 @@ function ControlPointsToSurfacePoints(controlPoints, discretizationPointsCount/*
                 
     var discretizationPoints_n = KnotsVectorDiscretization(knotsVector_n, 
                 "OPEN", basisFunctionOrder_n, nDiscretizationPointsCount);
-    //console.log("discretizationPoints_e = " + discretizationPoints_e);
-    //console.log("discretizationPoints_n = " + discretizationPoints_n);
     
     // wartości dla discretization points
     var resultPointsCount = eDiscretizationPointsCount * nDiscretizationPointsCount; // not needed after all
@@ -70,6 +63,7 @@ function ControlPointsToSurfacePoints(controlPoints, discretizationPointsCount/*
                 {
                     var N_e = CoxDeBoor(discretizationPoints_e[j], ee, basisFunctionOrder_e, basisFunctionsCount_e, knotsVector_e);
                     
+                    //console.log("controlPointIndex = " + controlPointIndex);
                     x_tmp += N_e * N_n * controlPoints[nn][controlPointIndex].x;
                     y_tmp += N_e * N_n * controlPoints[nn][controlPointIndex].y;
                     z_tmp += N_e * N_n * controlPoints[nn][controlPointIndex].z;
@@ -114,7 +108,6 @@ function CalculateArrayOfKnots(controlPointsCount, basisFunctionOrder, knotVecto
     {
         for(var i = 0; i < resultKnotsCount; i++)
             knotVector[i] = i;
-        //console.log("Periodic one.");
     }
     // else -> not supported
     else
@@ -148,7 +141,7 @@ function KnotsVectorDiscretization(knotVector, knotVectorType,
         tmpDiscretizationPointsCount = discretizationPointsCount + 1;
     }
     else
-        console.log("Unhandler/wrong type of knotVector");
+        console.log("Unhandled/wrong type of knotVector");
     
     var firstKnotIndex = offset;
     var lastKnotIndex = knotVector.length - offset - 1;
@@ -249,4 +242,23 @@ function TrianglesFromSurfacePoints(surfacePoints, discretizationPointsCount /*k
         }  
     }
     return triangles;
+}
+
+function SurfacePointsToGeometry(sPoints)
+{
+    // 1. złóż surfacepoints w trójkąty
+    // 2. złóż trójkąty w obiekt "geometry"
+    
+    var geometry = new THREE.Geometry();
+    for(var i = 0; i < sPoints.length; i++)
+        geometry.vertices.push(new THREE.Vertex(new THREE.Vector3(sPoints[i].x, sPoints[i].y, sPoints[i].z)));
+    
+    var triangles = TrianglesFromSurfacePoints(sPoints, 20);
+    
+    // face = polygon = składa się z surfacePointów przypisanych do trójkąta
+    for(var j = 0; j < (triangles.length); j++)
+        geometry.faces.push(new THREE.Face3(triangles[j].verticesNumerals[0],triangles[j].verticesNumerals[1],triangles[j].verticesNumerals[2]));
+    
+    geometry.computeFaceNormals();
+    return geometry;
 }
