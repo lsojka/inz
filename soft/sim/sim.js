@@ -83,6 +83,8 @@ Sim.App = function()
 	this.scene = null;
 	this.camera = null;
 	this.objects = [];
+        
+        this.stats = null;
 }
 
 Sim.App.prototype = new Sim.Publisher;
@@ -149,6 +151,7 @@ Sim.App.prototype.update = function()
 	{
 		this.objects[i].update();
 	}
+        this.stats.update();
 }
 
 // Add/remove objects

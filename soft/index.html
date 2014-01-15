@@ -9,7 +9,10 @@
 	<script src="libs/jquery-1.6.4.js"></script>
         <script src="libs/jquery.mousewheel.js"></script>
 	<script src="libs/RequestAnimationFrame.js"></script>
-	<script src="sim/sim.js"></script>
+        
+        <script src="libs/stats.min.js"></script>
+	
+        <script src="sim/sim.js"></script>
         
         <div>
             .txt z nurbsem
@@ -24,27 +27,43 @@
         <script src="projector.js"></script>
 
 	<script>
-	window.onload = function()
+        var stats = new Stats();
+        stats.setMode(1);
+        document.body.appendChild(stats.domElement);
+    
+        var uploadedFile;
+
+        window.onload = function()
         {
+
+            stats.begin();
+            
             var fileInput = document.getElementById("fileInput");
             fileInput.addEventListener('change', function(e){
                 extractFile(fileInput.files[0], function(e){
                     // process nurbs.txt
                     uploadedFile = e.target.result;
-                    // discretizationPointsCount na sztywno = 20;
+
+                    // discretizationPointsCount = 20;
                     var spts = ControlPointsToSurfacePoints(fileDataToControlPoints(uploadedFile), 20);
                     var geom = SurfacePointsToGeometry(spts);
                     // visualize
                     var container = document.getElementById("container");
                     var app = new Viewer();
+                    app.stats = stats;
                     app.init({ container: container });
 
                     app.CreateModelThenAddToScene(geom); // przenieść do inita
-                    app.createLocalCube();
+
+                    app.createLocalCube();            
                     app.run();
                 });
-            });                
+            });    
+            
+            stats.end();  
         }
+        
+
 	</script>
 
 </head>

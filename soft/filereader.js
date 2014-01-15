@@ -14,7 +14,7 @@ function fileDataToControlPoints(str)
     var cPoints = new Array(); // 2D array
     var fRows; //file Rows
     var fCols; //file Cols
-
+    
     var lineTemp = str.split("\n");
     fRows = lineTemp.length;
     pointStrings = str.split(";");
