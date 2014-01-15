@@ -104,7 +104,8 @@ Sim.App.prototype.init = function(param)
     scene.data = this;
 
     // Put in a camera at a good default location
-    camera = new THREE.PerspectiveCamera( 45, container.offsetWidth / container.offsetHeight, 1, 10000 );
+    // "far" corrected by x*10
+    camera = new THREE.PerspectiveCamera( 45, container.offsetWidth / container.offsetHeight, 1, 100000 );
     camera.position.set( 0, 0, 3.3333 );
 
     scene.add(camera);

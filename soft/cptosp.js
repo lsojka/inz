@@ -246,16 +246,12 @@ function TrianglesFromSurfacePoints(surfacePoints, discretizationPointsCount /*k
 
 function SurfacePointsToGeometry(sPoints)
 {
-    // 1. złóż surfacepoints w trójkąty
-    // 2. złóż trójkąty w obiekt "geometry"
-    
     var geometry = new THREE.Geometry();
     for(var i = 0; i < sPoints.length; i++)
         geometry.vertices.push(new THREE.Vertex(new THREE.Vector3(sPoints[i].x, sPoints[i].y, sPoints[i].z)));
     
     var triangles = TrianglesFromSurfacePoints(sPoints, 20);
     
-    // face = polygon = składa się z surfacePointów przypisanych do trójkąta
     for(var j = 0; j < (triangles.length); j++)
         geometry.faces.push(new THREE.Face3(triangles[j].verticesNumerals[0],triangles[j].verticesNumerals[1],triangles[j].verticesNumerals[2]));
     

@@ -18,18 +18,12 @@ Viewer.prototype = new Sim.App();
 
 Viewer.prototype.init = function(param)
 {
-    // "super"constructor ustawiający scenę
     Sim.App.prototype.init.call(this, param);
     this.createCameraControls();
-
-    // "latarka" przy kamerze
+    
     dlights[0] = new THREE.DirectionalLight( 0xffffff, 1 /*0.8*/ );
     dlights[0].position.set(-20, 0, 0);
     this.scene.add(dlights[0]);
-    
-    dlights[1] = new THREE.DirectionalLight( 0xffffff, 0.9 /*0.8*/ );
-    dlights[1].position.set(20, 0, 0);
-   // this.scene.add(dlights[1]);
 
     var amb = new THREE.AmbientLight( 0x808080, 1);
     this.scene.add(amb);
@@ -38,13 +32,11 @@ Viewer.prototype.init = function(param)
 
 Viewer.prototype.CreateModelThenAddToScene = function(geometry)
 {
-    // TODO : viewer tylko doczytuje gotowe, niezaleznie tworzone
     model = new Model();
     models.push(model);
     model.init(geometry, false);
     this.addObject(model);
-    console.log("Mesh created & added to scene.");
-    //console.log("Models size :" + models.length+", contains "+models);
+    //console.log("Mesh created & added to scene.");
 }
 
 Viewer.prototype.createLocalCube = function()
